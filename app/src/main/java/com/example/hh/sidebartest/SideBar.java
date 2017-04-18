@@ -2,6 +2,10 @@ package com.example.hh.sidebartest;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -16,6 +20,7 @@ public class SideBar extends View {
     private OnTouchingLetterListener touchingLetterListener;
 
     private int chooseLetterPosition = -1;
+    private Paint paint = new Paint();
     public static String[] firstLetters = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
             "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
             "W", "X", "Y", "Z", "#" };
@@ -36,6 +41,27 @@ public class SideBar extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        int height = getHeight();
+        int width = getWidth();
+        int singleHeight = height/firstLetters.length;
+
+        for(int i = 0;i<firstLetters.length; i++){
+            paint.setColor(Color.parseColor("#FFF"));
+            paint.setTypeface(Typeface.DEFAULT);
+            paint.setAntiAlias(true);
+            paint.setTextSize(20);
+
+            if(i == chooseLetterPosition){
+                paint.setColor(Color.parseColor("#3399ff"));
+                paint.setFakeBoldText(true);
+            }
+
+            float xPos = width /2 - paint.measureText(firstLetters[i]) /2 ;
+            float yPos = singleHeight * i + singleHeight;
+            canvas.drawText(firstLetters[i], xPos, yPos, paint);
+            paint.reset();
+        }
     }
 
     @Override
@@ -44,10 +70,13 @@ public class SideBar extends View {
         int action = event.getAction();
         switch (action)
         {
-            case MotionEvent.ACTION_UP:
-
+            case MotionEvent.ACTION_UP:     //按下后松手
+                setBackgroundDrawable(new ColorDrawable(0x00000000));
+                chooseLetterPosition = -1;
+                invalidate();
                 break;
-            default:
+            default:    //其他动作
+                setBackgroundResource(R.drawable.sidebar_background);
                 break;
         }
 
