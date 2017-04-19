@@ -47,8 +47,8 @@ public class SideBar extends View {
         int singleHeight = height/firstLetters.length;
 
         for(int i = 0;i<firstLetters.length; i++){
-            paint.setColor(Color.parseColor("#FFF"));
-            paint.setTypeface(Typeface.DEFAULT);
+            paint.setColor(Color.rgb(33, 65, 98));
+            paint.setTypeface(Typeface.DEFAULT_BOLD);
             paint.setAntiAlias(true);
             paint.setTextSize(20);
 
@@ -68,6 +68,9 @@ public class SideBar extends View {
     public boolean dispatchTouchEvent(MotionEvent event) {
 
         int action = event.getAction();
+        int oldChoose = chooseLetterPosition;
+        final int c = (int) (event.getY() / getHeight() * firstLetters.length); // 点击y坐标所占总高度的比例*firstLetters数组的长度就等于点击firstLetters中的个数.
+        OnTouchingLetterListener listener = touchingLetterListener;
         switch (action)
         {
             case MotionEvent.ACTION_UP:     //按下后松手
@@ -76,6 +79,13 @@ public class SideBar extends View {
                 invalidate();
                 break;
             default:    //其他动作
+                if(oldChoose != c){
+                    if (c >= 0 && c < firstLetters.length){
+                        if (listener != null) {
+                            listener.onLetterChanged(firstLetters[c]);
+                        }
+                    }
+                }
                 setBackgroundResource(R.drawable.sidebar_background);
                 break;
         }
