@@ -52,15 +52,15 @@ public class SideBar extends View {
             paint.setAntiAlias(true);
             paint.setTextSize(20);
 
-            if(i == chooseLetterPosition){
+            if(i == chooseLetterPosition){ // 选中的状态
                 paint.setColor(Color.parseColor("#3399ff"));
                 paint.setFakeBoldText(true);
             }
-
+            // x坐标等于中间-字符串宽度的一半.
             float xPos = width /2 - paint.measureText(firstLetters[i]) /2 ;
             float yPos = singleHeight * i + singleHeight;
             canvas.drawText(firstLetters[i], xPos, yPos, paint);
-            paint.reset();
+            paint.reset(); // 重置画笔
         }
     }
 
@@ -68,8 +68,9 @@ public class SideBar extends View {
     public boolean dispatchTouchEvent(MotionEvent event) {
 
         int action = event.getAction();
-        int oldChoose = chooseLetterPosition;
-        final int c = (int) (event.getY() / getHeight() * firstLetters.length); // 点击y坐标所占总高度的比例*firstLetters数组的长度就等于点击firstLetters中的个数.
+        // 点击y坐标所占总高度的比例*firstLetters数组的长度 就等于点击firstLetters中的position.
+        // 点击字母表中的位置
+        final int c = (int) (event.getY() / getHeight() * firstLetters.length);
         OnTouchingLetterListener listener = touchingLetterListener;
         switch (action)
         {
@@ -78,12 +79,14 @@ public class SideBar extends View {
                 chooseLetterPosition = -1;
                 invalidate();
                 break;
-            default:    //其他动作
-                if(oldChoose != c){
+            default:    // 其他动作 这里包括了 移动手指 保持按住状态 取消等
+                if(chooseLetterPosition != c){ // 如果
                     if (c >= 0 && c < firstLetters.length){
                         if (listener != null) {
                             listener.onLetterChanged(firstLetters[c]);
                         }
+                        chooseLetterPosition = c;
+                        invalidate();
                     }
                 }
                 setBackgroundResource(R.drawable.sidebar_background);
@@ -100,6 +103,4 @@ public class SideBar extends View {
     public void setTouchLetterListener(OnTouchingLetterListener touchingLetterListener){
         this.touchingLetterListener = touchingLetterListener;
     }
-
-
 }
