@@ -2,6 +2,9 @@ package com.example.hh.sidebartest;
 
 /**
  * Created by haohe on 2017/4/17 0017.
+ *  总体流程 ：
+ *  词组解析 - 获取首个字符串，判断中英文 -
+ *  如果中文，转ascii编码，通过编码表找到首字母；如果英文，直接插入stringbuilder
  *
  * 工具方法，不用记
  */
@@ -74,7 +77,7 @@ public class CharacterParser {
     private int getChsAscii(String chs) {
         int asc = 0;
         try {
-            byte[] bytes = chs.getBytes("gb2312");
+            byte[] bytes = chs.getBytes("gb2312"); // 中文编码格式，结果类似{-80， -94} 分别对应高位、低位字符
             if (bytes == null || bytes.length > 2 || bytes.length <= 0) {
                 throw new RuntimeException("illegal resource string");
             }
@@ -115,12 +118,12 @@ public class CharacterParser {
         buffer = new StringBuilder();
         for (int i = 0; i < chs.length(); i++) {
             key = chs.substring(i, i + 1);
-            if (key.getBytes().length >= 2) {
+            if (key.getBytes().length >= 2) {       //汉字
                 value = (String) convert(key);
                 if (value == null) {
                     value = "unknown";
                 }
-            } else {
+            } else { // 英文字母
                 value = key;
             }
             buffer.append(value);
