@@ -21,7 +21,7 @@ public class SideBar extends View {
 
     private int chooseLetterPosition = -1;
     private Paint paint = new Paint();
-    public static String[] firstLetters = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
+    public static String[] firstLetters = {"@", "A", "B", "C", "D", "E", "F", "G", "H", "I",
             "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
             "W", "X", "Y", "Z", "#" };
 
@@ -85,7 +85,7 @@ public class SideBar extends View {
 
         int action = event.getAction();
         // 点击y坐标所占总高度的比例*firstLetters数组的长度 就等于点击firstLetters中的position.
-        // 点击字母表中的位置
+        // 点击字母表中的位置 也就是点击字母的位次
         final int c = (int) (event.getY() / getHeight() * firstLetters.length);
         OnTouchingLetterListener listener = touchingLetterListener;
         switch (action)
@@ -96,13 +96,13 @@ public class SideBar extends View {
                 invalidate();
                 break;
             default:    // 其他动作 这里包括了 移动手指 保持按住状态 取消等
-                if(chooseLetterPosition != c){ // 如果
-                    if (c >= 0 && c < firstLetters.length){
-                        if (listener != null) {
+                if(chooseLetterPosition != c){ // 如果是移动到了其他字符
+                    if (c >= 0 && c < firstLetters.length){ // 点击位置是在字符上
+                        if (listener != null) { // 确保非空
                             listener.onLetterChanged(firstLetters[c]);
                         }
                         chooseLetterPosition = c;
-                        invalidate();
+                        invalidate(); // 执行完方法后无效化
                     }
                 }
                 setBackgroundResource(R.drawable.sidebar_background);

@@ -62,6 +62,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer{
         //根据position获取分类的首字母的 char ascii值
         int section = getSectionForPosition(position);
         //如果当前位置等于该分类首字母的char的位置，则认为是第一次出现
+        int c = getPositionForSection(section);
         if(position == getPositionForSection(section)){
 
             holder.tvLetter.setVisibility(View.VISIBLE);
@@ -84,26 +85,25 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer{
         return new Object[0];
     }
 
-    // 根据分类的首字母的Char ascii值获取其第一次出现该首字母的位置
+    // 根据分类的首字母的Char ascii值（索引号）获取其第一次出现该首字母的位置
+    // 根据分类列的索引号获得该序列的首个位置
     @Override
     public int getPositionForSection(int sectionIndex) {
 
-        for(int i = 0; i<getCount(); i++){
-            String sortStr = list.get(i).getSortLetters();
-            char firstChar = sortStr.toUpperCase().charAt(0);
-            if(firstChar == sectionIndex){
+        for(int i = 0; i<getCount(); i++){ // 数组个数
+            String sortStr = list.get(i).getSortLetters(); // 第 i 条数据的首字母
+            char firstChar = sortStr.toUpperCase().charAt(0); // 该字符的char值
+            if(firstChar == sectionIndex){ // 如果该char值等于
+
                 return i;
             }
         }
         return -1;
     }
 
-    // 根据ListView的当前位置获取分类的首字母的char ascii值
+    // 根据ListView的当前位置获取分类的首字母的char ascii值（索引号）
     @Override
     public int getSectionForPosition(int position) {
-
         return list.get(position).getSortLetters().charAt(0);
     }
-
-
 }
